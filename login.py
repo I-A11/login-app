@@ -42,7 +42,10 @@ def login():
     # Check username and password in accounts.txt file.
     with open('accounts.txt', 'r') as file:
         for line in file:
-            stored_username, stored_password = line.strip().split(',')
+            try:
+                stored_username, stored_password = line.strip().split(',')
+            except ValueError:
+                continue
             if username == stored_username and password == stored_password:
                 print('Login successful')
                 return True
@@ -52,10 +55,13 @@ def login():
 
 def view_accounts():
     # Display numbered list for accounts.
+    total_users = 0
     with open('accounts.txt', 'r') as file:
         for i, line in enumerate(file, 1):
             stored_username = line.strip().split(',')
             print(f"{i}. {stored_username[0]}")
+            total_users += 1
+    return total_users
 
 
 def main():
@@ -87,7 +93,8 @@ def main():
                 add_user()
             elif user_choice == '2':
                 # Call function to view accounts list
-                view_accounts()
+                total_users = view_accounts()
+                print(f"Total users = {total_users}")
             elif user_choice == '3':
                 # Logout
                 logged_in = False
